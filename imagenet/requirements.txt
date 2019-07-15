@@ -1,2 +1,3 @@
-torch
+# older torch version uses old operator set that onnx does not support anymore
+torch>=1.1.0
 torchvision

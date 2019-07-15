@@ -253,6 +253,19 @@ def main_worker(gpu, ngpus_per_node, args):
                 'best_acc1': best_acc1,
                 'optimizer' : optimizer.state_dict(),
             }, is_best)
+            # export model after each epoch
+            # dummy_input = torch.randn(int(args.batch_size), 3, 224, 224, device='cuda')
+            # torch.onnx.export(model.module, dummy_input, "{}_{}_{}.onnx".format(args.arch,"v0.0.1",epoch+1),export_params=True, verbose=True,training=False) #input_names=input_names, output_names=output_names)
+            # del dummy_input
+
+    if not args.multiprocessing_distributed or (args.multiprocessing_distributed
+            and args.rank % ngpus_per_node == 0):
+        dummy_input = torch.randn(int(args.batch_size), 3, 224, 224, device='cuda')
+        model_file_name="{}_{}.onnx".format(args.arch,"v0.0.1")
+        torch.onnx.export(model.module, dummy_input, model_file_name,export_params=True, verbose=True,training=False) #input_names=input_names, output_names=output_names)
+        export_dir = os.path.abspath(os.environ.get('PS_MODEL_PATH', os.getcwd() + '/models'))
+        shutil.copyfile(model_file_name, export_dir)
+        del dummy_input
 
 
 def train(train_loader, model, criterion, optimizer, epoch, args):

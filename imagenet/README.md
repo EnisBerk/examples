@@ -8,10 +8,17 @@ This implements training of popular model architectures, such as ResNet, AlexNet
 - `pip install -r requirements.txt`
 - Download the ImageNet dataset and move validation images to labeled subfolders
     - To do this, you can use the following script: https://raw.githubusercontent.com/soumith/imagenetloader.torch/master/valprep.sh
+    - OR you can use [tiny-imagenet](http://cs231n.stanford.edu/tiny-imagenet-200.zip)
+      - `wget http://cs231n.stanford.edu/tiny-imagenet-200.zip && unzip tiny-imagenet-200.zip`
 
 ## Training
 
 To train a model, run `main.py` with the desired model architecture and the path to the ImageNet dataset:
+
+```bash
+# test model export
+python main.py -a resnet18 --epoch 1 tiny-imagenet-200
+```
 
 ```bash
 python main.py -a resnet18 [imagenet-folder with train and val folders]
@@ -22,6 +29,7 @@ The default learning rate schedule starts at 0.1 and decays by a factor of 10 ev
 ```bash
 python main.py -a alexnet --lr 0.01 [imagenet-folder with train and val folders]
 ```
+
 
 ## Multi-processing Distributed Data Parallel Training
 
